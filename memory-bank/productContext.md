@@ -48,12 +48,6 @@ This logger API fills the gap by providing a dead-simple way to store arbitrary 
 - Data collection for personal projects
 - Simple journaling or tracking
 
-### Development/Testing
-- API testing data
-- Configuration values
-- Temporary storage during development
-- Quick data sharing between team members
-
 ### IoT and Automation
 - Sensor data logging
 - Simple event tracking
