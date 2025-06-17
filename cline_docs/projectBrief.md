@@ -2,7 +2,7 @@
 
 ## Overview
 
-Building a logger API for unstructured data.
+Building a Universal Data Logger API.
 
 ## Core Features
 

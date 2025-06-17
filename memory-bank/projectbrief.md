@@ -2,14 +2,14 @@
 
 ## Overview
 
-Building a logger API for unstructured data - a flexible system that allows users to store arbitrary key/value pairs with timestamps for quick data logging needs.
+Building a Universal Data Logger - a flexible system that allows users to store arbitrary key/value pairs with timestamps for quick data logging needs.
 
 ## Core Features
 
 - **HTTP REST API**: Clean, RESTful endpoints for data operations
 - **Authentication System**: User account access and data isolation
 - **Flexible Data Storage**: Simple key/value pairs with automatic timestamping
-- **Unstructured Data Support**: No rigid schema requirements
+- **Flexible Data Support**: No rigid schema requirements
 
 ## Target Users
 
