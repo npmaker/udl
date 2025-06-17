@@ -160,7 +160,6 @@ const handleSubmit = async () => {
     const { data, error: insertError } = await supabase
       .from('log_entries')
       .insert({
-        user_id: props.user.id,
         key: newEntry.value.key,
         value: parsedValue
       })
