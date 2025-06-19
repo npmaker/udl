@@ -5,21 +5,30 @@
       <h2 class="text-xl font-semibold text-gray-900 mb-4">
         {{ editingEntry ? 'Edit Log Entry' : 'Add New Log Entry' }}
       </h2>
-      
+
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="space-y-4">
           <div>
             <label for="key" class="block text-sm font-medium text-gray-700">
               Key
             </label>
-            <input
-              id="key"
-              v-model="newEntry.key"
-              type="text"
-              :disabled="loading || loadingSearch"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-              placeholder="Enter key to add entry or search existing entries"
-            />
+            <div class="flex">
+              <input
+                type="text"
+                id="key"
+                v-model="newEntry.key"
+                class="flex-1 block mt-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter key to add entry or search existing entries"
+              >
+              <button
+                type="button"
+                @click="searchEntries"
+                :disabled="loadingSearch || !newEntry.key.trim()"
+                class="mt-1 px-4 py-2 bg-blue-500 text-white border border-blue-500 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                {{ loadingSearch ? 'Searching...' : 'Find' }}
+              </button>
+            </div>
           </div>
           
           <div>
@@ -37,6 +46,55 @@
           </div>
         </div>
 
+        <div class="flex space-x-3">
+          <button
+            v-if="editingEntry"
+            type="submit"
+            :disabled="loading || !dirtyEntry || !newEntry.key.trim() || !newEntry.value.trim()"
+            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
+          >
+            {{ loading ? 'Updating...' : 'Update' }}
+          </button>
+          
+          <button
+            v-if="!editingEntry"
+            type="submit"
+            :disabled="loading || !newEntry.key.trim() || !newEntry.value.trim()"
+            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
+          >
+            {{ loading ? 'Adding...' : 'Add' }}
+          </button>
+
+          <button
+            v-if="editingEntry"
+            type="button"
+            @click="copyEntry()"
+            :disabled="loading || !newEntry.key.trim() || !newEntry.value.trim()"
+            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
+          >
+            {{ loading ? 'Copying...' : 'Copy' }}
+          </button>
+
+          <button
+            v-if="editingEntry"
+            type="button"
+            @click="cancelEdit"
+            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-md font-medium transition-colors"
+          >
+            Cancel
+          </button>
+
+          <button
+            v-if="isSearchActive"
+            type="button"
+            @click="clearSearch"
+            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+          >
+            Clear Search
+          </button>
+
+        </div>
+
         <div v-if="error" class="text-red-600 text-sm">
           {{ error }}
         </div>
@@ -49,52 +107,6 @@
           {{ searchResults.length }} result(s) found for "{{ newEntry.key }}"
         </div>
 
-        <div class="flex space-x-3">
-          <button
-            v-if="editingEntry"
-            type="submit"
-            :disabled="loading || !newEntry.key.trim() || !newEntry.value.trim()"
-            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
-          >
-            {{ loading ? 'Updating...' : 'Update Entry' }}
-          </button>
-          
-          <button
-            v-if="!editingEntry"
-            type="submit"
-            :disabled="loading || !newEntry.key.trim() || !newEntry.value.trim()"
-            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
-          >
-            {{ loading ? 'Adding...' : 'Add Entry' }}
-          </button>
-          
-          <button
-            type="button"
-            @click="searchEntries"
-            :disabled="loadingSearch || !newEntry.key.trim()"
-            class="bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
-          >
-            {{ loadingSearch ? 'Searching...' : 'Find Entries' }}
-          </button>
-          
-          <button
-            v-if="isSearchActive"
-            type="button"
-            @click="clearSearch"
-            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
-          >
-            Clear Search
-          </button>
-          
-          <button
-            v-if="editingEntry"
-            type="button"
-            @click="cancelEdit"
-            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-md font-medium transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
       </form>
     </div>
 
@@ -135,8 +147,9 @@
                 <span class="text-xs text-gray-500">
                   {{ formatDate(entry.created_at) }}
                 </span>
-                <span class="text-xs text-blue-500 opacity-75">
-                  (click to edit)
+                <span v-if="entry.created_at !== entry.updated_at"
+                  class="text-xs text-blue-500 opacity-75">
+                  (updated {{ formatDate(entry.updated_at) }})
                 </span>
               </div>
               <div class="text-gray-700">
@@ -198,6 +211,9 @@ const isSearchActive = ref(false)
 
 // Edit functionality
 const editingEntry = ref<LogEntry | null>(null)
+const dirtyEntry = computed(() => {
+  return editingEntry.value && newEntry.value.value != editingEntry.value.value
+})
 
 // Computed property for display entries
 const displayEntries = computed(() => {
@@ -333,6 +349,11 @@ const loadMore = () => {
   loadEntries(entries.value.length)
 }
 
+const copyEntry = () => {
+  editingEntry.value = null
+  handleSubmit()
+}
+
 const deleteEntry = async (id: string) => {
   if (!confirm('Are you sure you want to delete this entry?')) return
 
@@ -391,6 +412,7 @@ const searchEntries = async () => {
 
 const clearSearch = () => {
   newEntry.value.key = ''
+  newEntry.value.value = ''
   searchResults.value = []
   isSearchActive.value = false
 }
