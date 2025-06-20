@@ -17,14 +17,14 @@
                 type="text"
                 id="key"
                 v-model="newEntry.key"
-                class="flex-1 block mt-1 px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                class="flex-1 block mt-1 px-2 py-1 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter key to add entry or search existing entries"
               >
               <button
                 type="button"
                 @click="searchEntries"
                 :disabled="loadingSearch || !newEntry.key.trim()"
-                class="mt-1 px-4 py-2 bg-blue-500 text-white border border-blue-500 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                class="mt-1 px-3 py-1 text-sm bg-blue-500 text-white border border-blue-500 rounded-r-md hover:bg-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
                 {{ loadingSearch ? 'Searching...' : 'Find' }}
               </button>
@@ -40,7 +40,7 @@
               v-model="newEntry.value"
               type="text"
               :disabled="loading || loadingSearch"
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              class="mt-1 block w-full px-2 py-1 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
               placeholder="Any value (text, number, JSON, etc.)"
             />
           </div>
@@ -51,7 +51,7 @@
             v-if="editingEntry"
             type="submit"
             :disabled="loading || !dirtyEntry || !newEntry.key.trim() || !newEntry.value.trim()"
-            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
+            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-1 px-2 text-sm rounded-md font-medium transition-colors"
           >
             {{ loading ? 'Updating...' : 'Update' }}
           </button>
@@ -60,7 +60,7 @@
             v-if="!editingEntry"
             type="submit"
             :disabled="loading || !newEntry.key.trim() || !newEntry.value.trim()"
-            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
+            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-1 px-2 text-sm rounded-md font-medium transition-colors"
           >
             {{ loading ? 'Adding...' : 'Add' }}
           </button>
@@ -70,7 +70,7 @@
             type="button"
             @click="copyEntry()"
             :disabled="loading || !newEntry.key.trim() || !newEntry.value.trim()"
-            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-2 px-6 rounded-md font-medium transition-colors"
+            class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-1 px-2 text-sm rounded-md font-medium transition-colors"
           >
             {{ loading ? 'Copying...' : 'Copy' }}
           </button>
@@ -79,7 +79,7 @@
             v-if="editingEntry"
             type="button"
             @click="cancelEdit"
-            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-md font-medium transition-colors"
+            class="bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 text-sm rounded-md font-medium transition-colors"
           >
             Cancel
           </button>
@@ -88,7 +88,7 @@
             v-if="isSearchActive"
             type="button"
             @click="clearSearch"
-            class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-md font-medium transition-colors"
+            class="bg-gray-600 hover:bg-gray-700 text-white py-1 px-2 text-sm rounded-md font-medium transition-colors"
           >
             Clear Search
           </button>
@@ -119,7 +119,7 @@
         <button
           @click="refreshEntries"
           :disabled="loadingEntries"
-          class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors"
+          class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-1 px-2 rounded-md text-sm font-medium transition-colors"
         >
           {{ loadingEntries ? 'Loading...' : 'Refresh' }}
         </button>
@@ -170,7 +170,7 @@
         <button
           @click="loadMore"
           :disabled="loadingMore"
-          class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-2 px-4 rounded-md text-sm font-medium transition-colors"
+          class="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white py-1 px-2 rounded-md text-sm font-medium transition-colors"
         >
           {{ loadingMore ? 'Loading...' : 'Load More' }}
         </button>

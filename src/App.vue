@@ -11,7 +11,7 @@
             <span class="text-sm text-gray-700">{{ user.email }}</span>
             <button
               @click="handleSignOut"
-              class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-md text-sm font-medium transition-colors"
             >
               Sign Out
             </button>
